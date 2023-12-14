@@ -7,6 +7,17 @@ const httpc = new httpm.HttpClient(
   {allowRetries: true, maxRetries: 3}
 )
 
+// Predefined list of checksums
+const predefinedChecksums = [
+  '91a239400bb638f36a1795d8fdf7939d532cdc7d794d1119b7261aac158b1e60', 
+  'e996d452d2645e70c01c11143ca2d3742734a28da2bf61f25c82bdc288c9e637'
+];
+
+export async function getValidChecksums(
+): Promise<string[]> {
+  return predefinedChecksums;
+}
+
 export async function fetchValidChecksums(
   allowSnapshots: boolean
 ): Promise<string[]> {

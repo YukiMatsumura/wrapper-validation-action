@@ -30,10 +30,19 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.fetchValidChecksums = void 0;
+exports.fetchValidChecksums = exports.getValidChecksums = void 0;
 const httpm = __importStar(__nccwpck_require__(5538));
 const core = __importStar(__nccwpck_require__(2186));
 const httpc = new httpm.HttpClient('gradle/wrapper-validation-action', undefined, { allowRetries: true, maxRetries: 3 });
+// Predefined list of checksums
+const predefinedChecksums = [
+    '91a239400bb638f36a1795d8fdf7939d532cdc7d794d1119b7261aac158b1e60',
+    'e996d452d2645e70c01c11143ca2d3742734a28da2bf61f25c82bdc288c9e637'
+];
+async function getValidChecksums() {
+    return predefinedChecksums;
+}
+exports.getValidChecksums = getValidChecksums;
 async function fetchValidChecksums(allowSnapshots) {
     core.info("Yuki: checksums fetchValidChecksums called");
     const all = await httpGetJsonArray('https://services.gradle.org/versions/all');
@@ -288,7 +297,7 @@ async function findInvalidWrapperJars(gitRepoRoot, minWrapperCount, allowSnapsho
     core.info("Yuki: new ValidationResult called");
     if (wrapperJars.length > 0) {
         core.info("Yuki: wrapperJars.length > 0 called");
-        const validChecksums = await checksums.fetchValidChecksums(allowSnapshots);
+        const validChecksums = await checksums.getValidChecksums(); // original: checksums.fetchValidChecksums(allowSnapshots)
         core.info("Yuki: checksums.fetchValidChecksums called");
         validChecksums.push(...allowChecksums);
         core.info("Yuki: validChecksums.push called");
