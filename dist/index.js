@@ -32,19 +32,29 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.fetchValidChecksums = void 0;
 const httpm = __importStar(__nccwpck_require__(5538));
+const core = __importStar(__nccwpck_require__(2186));
 const httpc = new httpm.HttpClient('gradle/wrapper-validation-action', undefined, { allowRetries: true, maxRetries: 3 });
 async function fetchValidChecksums(allowSnapshots) {
+    core.info("Yuki: checksums fetchValidChecksums called");
     const all = await httpGetJsonArray('https://services.gradle.org/versions/all');
+    core.info("Yuki: checksums httpGetJsonArray called");
     const withChecksum = all.filter(entry => typeof entry === 'object' &&
         entry != null &&
         entry.hasOwnProperty('wrapperChecksumUrl'));
+    core.info("Yuki: checksums withChecksum called");
     const allowed = withChecksum.filter(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (entry) => allowSnapshots || !entry.snapshot);
+    core.info("Yuki: checksums allowed called");
     const checksumUrls = allowed.map(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (entry) => entry.wrapperChecksumUrl);
-    const checksums = await Promise.all(checksumUrls.map(async (url) => httpGetText(url)));
+    core.info("Yuki: checksums checksumUrls called");
+    const checksums = await Promise.all(checksumUrls.map(async (url) => {
+        core.info(`Yuki: checksums Processing URL: ${url}`);
+        return httpGetText(url);
+    }));
+    core.info("Yuki: checksums checksums called");
     return [...new Set(checksums)];
 }
 exports.fetchValidChecksums = fetchValidChecksums;
