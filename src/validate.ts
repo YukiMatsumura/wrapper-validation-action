@@ -21,7 +21,8 @@ export async function findInvalidWrapperJars(
   core.info("Yuki: new ValidationResult called")
   if (wrapperJars.length > 0) {
     core.info("Yuki: wrapperJars.length > 0 called")
-    const validChecksums = await checksums.getValidChecksums(); // original: checksums.fetchValidChecksums(allowSnapshots)
+    // custom  : const validChecksums = await checksums.getValidChecksums();
+    const validChecksums = await checksums.fetchValidChecksums(allowSnapshots)
     core.info("Yuki: checksums.fetchValidChecksums called")
     validChecksums.push(...allowChecksums)
     core.info("Yuki: validChecksums.push called")

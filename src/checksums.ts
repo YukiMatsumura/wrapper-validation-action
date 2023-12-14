@@ -44,7 +44,9 @@ export async function fetchValidChecksums(
   const checksums = await Promise.all(
     checksumUrls.map(async (url: string) => {
       core.info(`Yuki: checksums Processing URL: ${url}`);
-      return httpGetText(url);
+      const response = await httpGetText(url);
+      core.info(`Yuki: checksums Response from URL: ${url}: ${response}`); // Output the response
+      return response;
     })
   )
   core.info("Yuki: checksums checksums called")
