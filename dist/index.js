@@ -266,24 +266,35 @@ exports.WrapperJar = exports.ValidationResult = exports.findInvalidWrapperJars =
 const find = __importStar(__nccwpck_require__(548));
 const checksums = __importStar(__nccwpck_require__(4382));
 const hash = __importStar(__nccwpck_require__(1859));
+const core = __importStar(__nccwpck_require__(2186));
 async function findInvalidWrapperJars(gitRepoRoot, minWrapperCount, allowSnapshots, allowChecksums) {
+    core.info("Yuki: findInvalidWrapperJars called");
     const wrapperJars = await find.findWrapperJars(gitRepoRoot);
+    core.info("Yuki: find.findWrapperJars called");
     const result = new ValidationResult([], []);
     if (wrapperJars.length < minWrapperCount) {
         result.errors.push(`Expected to find at least ${minWrapperCount} Gradle Wrapper JARs but got only ${wrapperJars.length}`);
     }
+    core.info("Yuki: new ValidationResult called");
     if (wrapperJars.length > 0) {
+        core.info("Yuki: wrapperJars.length > 0 called");
         const validChecksums = await checksums.fetchValidChecksums(allowSnapshots);
+        core.info("Yuki: checksums.fetchValidChecksums called");
         validChecksums.push(...allowChecksums);
+        core.info("Yuki: validChecksums.push called");
         for (const wrapperJar of wrapperJars) {
             const sha = await hash.sha256File(wrapperJar);
+            core.info("Yuki: hash.sha256File called");
             if (!validChecksums.includes(sha)) {
                 result.invalid.push(new WrapperJar(wrapperJar, sha));
+                core.info("Yuki: invalid.push called");
             }
             else {
                 result.valid.push(new WrapperJar(wrapperJar, sha));
+                core.info("Yuki: valid.push called");
             }
         }
+        core.info("Yuki: for called");
     }
     return result;
 }

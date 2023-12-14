@@ -1,6 +1,7 @@
 import * as find from './find'
 import * as checksums from './checksums'
 import * as hash from './hash'
+import * as core from '@actions/core'
 
 export async function findInvalidWrapperJars(
   gitRepoRoot: string,
@@ -8,24 +9,34 @@ export async function findInvalidWrapperJars(
   allowSnapshots: boolean,
   allowChecksums: string[]
 ): Promise<ValidationResult> {
+  core.info("Yuki: findInvalidWrapperJars called")
   const wrapperJars = await find.findWrapperJars(gitRepoRoot)
+  core.info("Yuki: find.findWrapperJars called")
   const result = new ValidationResult([], [])
   if (wrapperJars.length < minWrapperCount) {
     result.errors.push(
       `Expected to find at least ${minWrapperCount} Gradle Wrapper JARs but got only ${wrapperJars.length}`
     )
   }
+  core.info("Yuki: new ValidationResult called")
   if (wrapperJars.length > 0) {
+    core.info("Yuki: wrapperJars.length > 0 called")
     const validChecksums = await checksums.fetchValidChecksums(allowSnapshots)
+    core.info("Yuki: checksums.fetchValidChecksums called")
     validChecksums.push(...allowChecksums)
+    core.info("Yuki: validChecksums.push called")
     for (const wrapperJar of wrapperJars) {
       const sha = await hash.sha256File(wrapperJar)
+      core.info("Yuki: hash.sha256File called")
       if (!validChecksums.includes(sha)) {
         result.invalid.push(new WrapperJar(wrapperJar, sha))
+        core.info("Yuki: invalid.push called")
       } else {
         result.valid.push(new WrapperJar(wrapperJar, sha))
+        core.info("Yuki: valid.push called")
       }
     }
+    core.info("Yuki: for called")
   }
   return result
 }
