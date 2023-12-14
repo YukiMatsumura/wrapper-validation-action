@@ -206,6 +206,7 @@ const core = __importStar(__nccwpck_require__(2186));
 const validate = __importStar(__nccwpck_require__(1997));
 async function run() {
     try {
+        core.info("Hello!!! My First TypeScript Action!!!");
         const result = await validate.findInvalidWrapperJars(path.resolve('.'), +core.getInput('min-wrapper-count'), core.getInput('allow-snapshots') === 'true', core.getInput('allow-checksums').split(','));
         if (result.isValid()) {
             core.info(result.toDisplayString());

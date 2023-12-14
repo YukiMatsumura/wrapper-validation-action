@@ -5,6 +5,7 @@ import * as validate from './validate'
 
 export async function run(): Promise<void> {
   try {
+    core.info("Hello!!! My First TypeScript Action!!!")
     const result = await validate.findInvalidWrapperJars(
       path.resolve('.'),
       +core.getInput('min-wrapper-count'),
